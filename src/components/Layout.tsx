@@ -5,13 +5,14 @@ import Topbar from './Topbar'
 interface LayoutProps {
   active: NavKey
   onNavigate: (next: NavKey) => void
+  onLogoClick?: () => void
   children: ReactNode
 }
 
-function Layout({ active, onNavigate, children }: LayoutProps) {
+function Layout({ active, onNavigate, onLogoClick, children }: LayoutProps) {
   return (
     <div className="dashboard">
-      <Topbar />
+      <Topbar onLogoClick={onLogoClick} />
       <div className="layout">
         <Sidebar active={active} onNavigate={onNavigate} />
         <main className="content">

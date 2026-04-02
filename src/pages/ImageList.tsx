@@ -149,6 +149,7 @@ const fileRows = [
 function ImageList() {
   const [tab, setTab] = useState<'deploy' | 'files'>('deploy')
   const [page, setPage] = useState(1)
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const rows = tab === 'deploy' ? deployRows : fileRows
   const totalPages = 3
 
@@ -215,7 +216,11 @@ function ImageList() {
             전체 버전 <span className="caret" aria-hidden="true" />
           </button>
         </div>
-        <button className="primary-button" type="button">
+        <button
+          className="primary-button"
+          type="button"
+          onClick={() => setIsModalOpen(true)}
+        >
           + 배포 구성 등록
         </button>
       </div>
@@ -285,6 +290,122 @@ function ImageList() {
           ›
         </button>
       </div>
+
+      {isModalOpen && (
+        <div
+          className="modal-overlay"
+          role="dialog"
+          aria-modal="true"
+          onClick={() => setIsModalOpen(false)}
+        >
+          <div className="modal" onClick={(event) => event.stopPropagation()}>
+            <div className="modal-header">
+              <h2 className="modal-title">배포 구성 등록</h2>
+              <button
+                className="modal-close"
+                type="button"
+                aria-label="닫기"
+                onClick={() => setIsModalOpen(false)}
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="modal-alert">
+              <span className="modal-alert-icon" aria-hidden="true" />
+              이미지는 채널사가 서명한 파일만 업로드 하수 있습니다.
+            </div>
+
+            <div className="modal-grid">
+              <div className="field">
+                <div className="field-label">OS 종류 *</div>
+                <div className="field-input">Windows</div>
+              </div>
+              <div className="field">
+                <div className="field-label">OS 이름 *</div>
+                <div className="field-input">Windows 11 Pro</div>
+              </div>
+              <div className="field">
+                <div className="field-label">빌드 버전</div>
+                <div className="field-input">23H2</div>
+              </div>
+              <div className="field">
+                <div className="field-label">이미지 제목</div>
+                <div className="field-input">기본 표준 이미지 v3.2</div>
+              </div>
+            </div>
+
+            <div className="file-section">
+              <div className="file-title">OS 이미지 파일 *</div>
+              <div className="file-box">
+                <div className="file-row">
+                  <button className="file-button" type="button">
+                    이미지 선택
+                  </button>
+                  <span className="file-name">Win11Pro_23H2_base.img</span>
+                  <button className="file-button" type="button">
+                    서명 파일 선택
+                  </button>
+                  <span className="file-name">Win11Pro_23H2_base.sig</span>
+                </div>
+                <div className="file-meta">
+                  기본 표준 이미지 v3.2 • Windows 11 Pro • 23H2 18.4 GB •
+                  서명인: 김관리 • 서명일:2024-01-14
+                </div>
+              </div>
+            </div>
+
+            <div className="file-section">
+              <div className="file-title data">DATA 이미지 파일</div>
+              <div className="file-box">
+                <div className="file-row">
+                  <button className="file-button" type="button">
+                    이미지 선택
+                  </button>
+                  <span className="file-name muted">미선택</span>
+                  <button className="file-button" type="button">
+                    서명 파일 선택
+                  </button>
+                  <span className="file-name muted">미선택</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="file-section">
+              <div className="file-title custom">CUSTOM 이미지 파일</div>
+              <div className="file-box">
+                <div className="file-row">
+                  <button className="file-button" type="button">
+                    이미지 선택
+                  </button>
+                  <span className="file-name muted">미선택</span>
+                  <button className="file-button" type="button">
+                    서명 파일 선택
+                  </button>
+                  <span className="file-name muted">미선택</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="modal-actions">
+              <button
+                className="modal-btn ghost"
+                type="button"
+                onClick={() => setIsModalOpen(false)}
+              >
+                취소
+              </button>
+              <button
+                className="modal-btn primary"
+                type="button"
+                onClick={() => setIsModalOpen(false)}
+              >
+                등록
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
