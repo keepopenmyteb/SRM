@@ -79,6 +79,12 @@
   height: 18px;
 }
 
+.time-icon {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
 .time-label {
   padding: 2px 6px;
   border-radius: 4px;
@@ -110,6 +116,12 @@
   height: 20px;
 }
 
+.icon-img {
+  width: 20px;
+  height: 20px;
+  display: block;
+}
+
 .layout {
   display: flex;
   flex: 1;
@@ -136,16 +148,15 @@
   width: 54px;
   height: 54px;
   border-radius: 50%;
-  background: #0f0f0f;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.avatar svg {
-  width: 34px;
-  height: 34px;
-  fill: #ffffff;
+.avatar-img {
+  width: 54px;
+  height: 54px;
+  display: block;
 }
 
 .profile-meta {
@@ -202,6 +213,12 @@
   width: 18px;
   height: 18px;
   color: #bdbdbd;
+}
+
+.menu-icon-img {
+  width: 18px;
+  height: 18px;
+  display: block;
 }
 
 .menu-item.active {
