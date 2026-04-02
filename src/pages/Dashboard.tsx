@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react'
+import { useState } from 'react'
 
 const statCards = [
   {
@@ -46,12 +47,6 @@ const barSeries = [
   { success: 58, fail: 30 },
 ]
 
-const deployRatios = [
-  { label: '23H2', value: '38%', color: 'ratio-blue' },
-  { label: '22H2', value: '29%', color: 'ratio-green' },
-  { label: '21H2', value: '21%', color: 'ratio-orange' },
-  { label: '기타', value: '12%', color: 'ratio-gray' },
-]
 
 const windowsRows = [
   { label: 'Windows 11 Pro', value: 44, color: 'bar-blue' },
@@ -168,6 +163,24 @@ const alerts = [
 ]
 
 function Dashboard() {
+  const [hoveredSector, setHoveredSector] = useState<number | null>(null)
+
+  const r = 35
+  const circumference = 2 * Math.PI * r
+  const sectors = [
+    { pct: 38, color: '#2f7cf6', label: '23H2', value: '38%', ratioColor: 'ratio-blue' },
+    { pct: 29, color: '#48d97a', label: '22H2', value: '29%', ratioColor: 'ratio-green' },
+    { pct: 21, color: '#f4b13f', label: '21H2', value: '21%', ratioColor: 'ratio-orange' },
+    { pct: 12, color: '#6b6b6b', label: '기타', value: '12%', ratioColor: 'ratio-gray' },
+  ]
+  let cumPct = 0
+  const sectorData = sectors.map((s, i) => {
+    const offset = circumference * (1 - cumPct / 100)
+    const dashLen = (s.pct / 100) * circumference
+    cumPct += s.pct
+    return { ...s, offset, dashLen, index: i }
+  })
+
   return (
     <>
       <div className="page-header">
@@ -236,13 +249,51 @@ function Dashboard() {
         <div className="panel chart-panel">
           <div className="panel-title">빌드 버전 현황</div>
           <div className="donut-wrap">
-            <div className="donut" />
+            <div className="donut-svg-wrap">
+              <svg viewBox="0 0 100 100" className="donut-svg" aria-hidden="true">
+                {sectorData.map((s) => (
+                  <circle
+                    key={s.index}
+                    cx="50"
+                    cy="50"
+                    r={r}
+                    fill="none"
+                    stroke={s.color}
+                    strokeWidth={hoveredSector === s.index ? 26 : 22}
+                    strokeDasharray={`${s.dashLen} ${circumference - s.dashLen}`}
+                    strokeDashoffset={s.offset}
+                    style={{
+                      transition: 'stroke-width 0.2s ease, opacity 0.2s ease',
+                      opacity: hoveredSector === null || hoveredSector === s.index ? 1 : 0.45,
+                      cursor: 'pointer',
+                    }}
+                    onMouseEnter={() => setHoveredSector(s.index)}
+                    onMouseLeave={() => setHoveredSector(null)}
+                  />
+                ))}
+                {hoveredSector !== null && (
+                  <>
+                    <text x="50" y="46" textAnchor="middle" fontSize="9" fill="#f0f0f0" fontWeight="700">
+                      {sectors[hoveredSector].label}
+                    </text>
+                    <text x="50" y="58" textAnchor="middle" fontSize="11" fill={sectors[hoveredSector].color} fontWeight="700">
+                      {sectors[hoveredSector].value}
+                    </text>
+                  </>
+                )}
+              </svg>
+            </div>
             <div className="donut-legend">
-              {deployRatios.map((item) => (
-                <div key={item.label} className="donut-item">
-                  <span className={`ratio-dot ${item.color}`} />
-                  <span className="ratio-label">{item.label}</span>
-                  <span className="ratio-value">{item.value}</span>
+              {sectorData.map((s) => (
+                <div
+                  key={s.label}
+                  className={`donut-item ${hoveredSector === s.index ? 'donut-item-active' : ''}`}
+                  onMouseEnter={() => setHoveredSector(s.index)}
+                  onMouseLeave={() => setHoveredSector(null)}
+                >
+                  <span className={`ratio-dot ${s.ratioColor}`} />
+                  <span className="ratio-label">{s.label}</span>
+                  <span className="ratio-value">{s.value}</span>
                 </div>
               ))}
             </div>

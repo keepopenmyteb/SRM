@@ -184,16 +184,52 @@ const existingRows = [
   },
 ]
 
+const rotateRows = <T,>(rows: T[], page: number) => {
+  if (rows.length === 0) {
+    return rows
+  }
+  const shift = (page - 1) % rows.length
+  return [...rows.slice(shift), ...rows.slice(0, shift)]
+}
+
 function ImageList() {
   const [tab, setTab] = useState<'deploy' | 'files'>('deploy')
   const [page, setPage] = useState(1)
+  const [searchTerm, setSearchTerm] = useState('')
   const [activeModal, setActiveModal] = useState<'deploy' | 'upload' | null>(
     null,
   )
   const [uploadTab, setUploadTab] = useState<'upload' | 'existing'>('upload')
   const [uploadStep, setUploadStep] = useState<'select' | 'confirm'>('select')
   const [selectedExistingId, setSelectedExistingId] = useState(1)
+  const [existingSearch, setExistingSearch] = useState('')
   const totalPages = 3
+  const normalizedSearch = searchTerm.trim().toLowerCase()
+  const deployFiltered = normalizedSearch
+    ? deployRows.filter((row) =>
+        [row.name, row.title, row.version, row.os].some((value) =>
+          value.toLowerCase().includes(normalizedSearch),
+        ),
+      )
+    : deployRows
+  const fileFiltered = normalizedSearch
+    ? fileRows.filter((row) =>
+        [row.osName, row.description, row.osType, row.build].some((value) =>
+          value.toLowerCase().includes(normalizedSearch),
+        ),
+      )
+    : fileRows
+  const deployPageRows = normalizedSearch ? deployFiltered : rotateRows(deployFiltered, page)
+  const filePageRows = normalizedSearch ? fileFiltered : rotateRows(fileFiltered, page)
+
+  const normalizedExistingSearch = existingSearch.trim().toLowerCase()
+  const existingFiltered = normalizedExistingSearch
+    ? existingRows.filter((row) =>
+        [row.osName, row.title, row.osType, row.build].some((value) =>
+          value.toLowerCase().includes(normalizedExistingSearch),
+        ),
+      )
+    : existingRows
 
   const closeModal = () => {
     setActiveModal(null)
@@ -218,14 +254,22 @@ function ImageList() {
             <button
               className={`tab ${tab === 'deploy' ? 'active' : ''}`}
               type="button"
-              onClick={() => setTab('deploy')}
+              onClick={() => {
+                setTab('deploy')
+                setPage(1)
+                setSearchTerm('')
+              }}
             >
               배포 구성
             </button>
             <button
               className={`tab ${tab === 'files' ? 'active' : ''}`}
               type="button"
-              onClick={() => setTab('files')}
+              onClick={() => {
+                setTab('files')
+                setPage(1)
+                setSearchTerm('')
+              }}
             >
               이미지 파일
             </button>
@@ -234,22 +278,13 @@ function ImageList() {
       </div>
       <div className="image-controls">
         <label className="search-field">
-          <svg className="search-icon" viewBox="0 0 20 20" aria-hidden="true">
-            <circle
-              cx="9"
-              cy="9"
-              r="6"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-            />
-            <path
-              d="M13.5 13.5L17 17"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-            />
-          </svg>
+          <img
+            className="search-icon"
+            src="/search-icon.svg"
+            alt=""
+            aria-hidden="true"
+          />
+
           <input
             className="search-input"
             type="text"
@@ -258,6 +293,11 @@ function ImageList() {
                 ? 'OS 이름, 이미지 제목, 버전명 검색...'
                 : '이미지 파일명, OS이름으로 검색...'
             }
+            value={searchTerm}
+            onChange={(event) => {
+              setSearchTerm(event.target.value)
+              setPage(1)
+            }}
           />
         </label>
         <div className="filter-group">
@@ -311,9 +351,23 @@ function ImageList() {
                 </tr>
               </thead>
               <tbody>
-                {deployRows.map((row) => (
-                  <tr key={row.id}>
-                    <td>{row.id}</td>
+                {deployPageRows.length === 0 ? (
+                  <tr>
+                    <td colSpan={9}>
+                      <div className="table-empty">
+                        <svg className="table-empty-icon" viewBox="0 0 20 20" aria-hidden="true">
+                          <circle cx="9" cy="9" r="6" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                          <line x1="13.5" y1="13.5" x2="17" y2="17" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                          <line x1="6" y1="9" x2="12" y2="9" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+                        </svg>
+                        <span>검색 결과가 없습니다</span>
+                      </div>
+                    </td>
+                  </tr>
+                ) : (
+                  deployPageRows.map((row, index) => (
+                  <tr key={`${row.id}-${page}`} className="image-table-row">
+                    <td>{index + 1}</td>
                     <td>
                       <span className="os-badge">{row.os}</span>
                     </td>
@@ -342,7 +396,8 @@ function ImageList() {
                       </div>
                     </td>
                   </tr>
-                ))}
+                ))
+                )}
               </tbody>
             </table>
           ) : (
@@ -363,9 +418,23 @@ function ImageList() {
                 </tr>
               </thead>
               <tbody>
-                {fileRows.map((row) => (
-                  <tr key={row.id}>
-                    <td>{row.id}</td>
+                {filePageRows.length === 0 ? (
+                  <tr>
+                    <td colSpan={11}>
+                      <div className="table-empty">
+                        <svg className="table-empty-icon" viewBox="0 0 20 20" aria-hidden="true">
+                          <circle cx="9" cy="9" r="6" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                          <line x1="13.5" y1="13.5" x2="17" y2="17" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                          <line x1="6" y1="9" x2="12" y2="9" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+                        </svg>
+                        <span>검색 결과가 없습니다</span>
+                      </div>
+                    </td>
+                  </tr>
+                ) : (
+                  filePageRows.map((row, index) => (
+                  <tr key={`${row.id}-${page}`} className="image-table-row">
+                    <td>{index + 1}</td>
                     <td>
                       <span
                         className={`type-badge ${row.imageType.toLowerCase()}`}
@@ -402,7 +471,9 @@ function ImageList() {
                       </div>
                     </td>
                   </tr>
-                ))}
+                ))
+                )}
+
               </tbody>
             </table>
           )}
@@ -635,6 +706,8 @@ function ImageList() {
                           className="upload-search-input"
                           type="text"
                           placeholder="이미지 제목, OS 이름으로 검색..."
+                          value={existingSearch}
+                          onChange={(event) => setExistingSearch(event.target.value)}
                         />
                       </label>
 
@@ -652,7 +725,7 @@ function ImageList() {
                             </tr>
                           </thead>
                           <tbody>
-                            {existingRows.map((row) => (
+                            {existingFiltered.map((row) => (
                               <tr
                                 key={row.id}
                                 className={
