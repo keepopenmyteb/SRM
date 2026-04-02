@@ -1,4 +1,11 @@
-function Sidebar() {
+export type NavKey = 'dashboard' | 'images' | 'migration'
+
+interface SidebarProps {
+  active: NavKey
+  onNavigate: (next: NavKey) => void
+}
+
+function Sidebar({ active, onNavigate }: SidebarProps) {
   return (
     <aside className="sidebar">
       <div className="profile">
@@ -13,19 +20,31 @@ function Sidebar() {
 
       <div className="menu-label">메뉴</div>
       <nav className="menu">
-        <button className="menu-item active" type="button">
+        <button
+          className={`menu-item ${active === 'dashboard' ? 'active' : ''}`}
+          type="button"
+          onClick={() => onNavigate('dashboard')}
+        >
           <span className="menu-icon" aria-hidden="true">
             <img className="menu-icon-img" src="/dashboard-icon.svg" alt="" />
           </span>
           <span>대시보드</span>
         </button>
-        <button className="menu-item" type="button">
+        <button
+          className={`menu-item ${active === 'images' ? 'active' : ''}`}
+          type="button"
+          onClick={() => onNavigate('images')}
+        >
           <span className="menu-icon" aria-hidden="true">
             <img className="menu-icon-img" src="/image-list-icon.svg" alt="" />
           </span>
           <span>이미지 목록</span>
         </button>
-        <button className="menu-item" type="button">
+        <button
+          className={`menu-item ${active === 'migration' ? 'active' : ''}`}
+          type="button"
+          onClick={() => onNavigate('migration')}
+        >
           <span className="menu-icon" aria-hidden="true">
             <img
               className="menu-icon-img"
