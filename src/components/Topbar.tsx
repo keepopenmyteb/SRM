@@ -1,12 +1,16 @@
-function Topbar() {
+interface TopbarProps {
+  onLogoClick?: () => void
+}
+
+function Topbar({ onLogoClick }: TopbarProps) {
   return (
     <header className="topbar">
-      <div className="brand">
+      <button className="brand" type="button" onClick={onLogoClick}>
         <img className="brand-logo" src="/logo.svg" alt="Zeronsoft N" />
         <span className="brand-text">
           ZERONSOFT<span className="brand-accent">N</span>
         </span>
-      </div>
+      </button>
       <div className="topbar-right">
         <button className="user-dropdown" type="button">
           <span>관리자</span>
