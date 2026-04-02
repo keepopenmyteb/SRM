@@ -1,0 +1,18 @@
+{
+    "sourceFile": "src/components/Topbar.tsx",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1775153046598,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1775153046598,
+            "name": "Commit-0",
+            "content": "function Topbar() {\n  return (\n    <header className=\"topbar\">\n      <div className=\"brand\">\n        <img className=\"brand-logo\" src=\"/logo.svg\" alt=\"Zeronsoft N\" />\n        <span className=\"brand-text\">\n          ZERONSOFT<span className=\"brand-accent\">N</span>\n        </span>\n      </div>\n      <div className=\"topbar-right\">\n        <button className=\"user-dropdown\" type=\"button\">\n          <span>관리자</span>\n          <svg viewBox=\"0 0 10 6\" aria-hidden=\"true\">\n            <path\n              d=\"M1 1l4 4 4-4\"\n              fill=\"none\"\n              stroke=\"currentColor\"\n              strokeWidth=\"1.5\"\n            />\n          </svg>\n        </button>\n        <div className=\"time-pill\">\n          <img className=\"time-icon\" src=\"/clock-icon.svg\" alt=\"\" />\n          <span className=\"time-text\">09:45</span>\n          <span className=\"time-label\">연장</span>\n        </div>\n        <div className=\"topbar-icons\">\n          <button className=\"icon-button\" type=\"button\" aria-label=\"언어 변경\">\n            <img\n              className=\"icon-img\"\n              src=\"/change-language-icon.svg\"\n              alt=\"\"\n            />\n          </button>\n          <button className=\"icon-button\" type=\"button\" aria-label=\"정보\">\n            <img\n              className=\"icon-img\"\n              src=\"/information-icon.svg\"\n              alt=\"\"\n            />\n          </button>\n          <button className=\"icon-button\" type=\"button\" aria-label=\"설정\">\n            <img className=\"icon-img\" src=\"/settings-icon.svg\" alt=\"\" />\n          </button>\n          <button className=\"icon-button\" type=\"button\" aria-label=\"알림\">\n            <img className=\"icon-img\" src=\"/bell-icon.svg\" alt=\"\" />\n          </button>\n          <button className=\"icon-button\" type=\"button\" aria-label=\"로그아웃\">\n            <img className=\"icon-img\" src=\"/exit-icon.svg\" alt=\"\" />\n          </button>\n        </div>\n      </div>\n    </header>\n  )\n}\n\nexport default Topbar\n"
+        }
+    ]
+}

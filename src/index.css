@@ -15,10 +15,12 @@
 body {
   margin: 0;
   background: #141414;
+  overflow: hidden;
 }
 
 #root {
   min-height: 100vh;
+  overflow: hidden;
 }
 
 button {

@@ -22,7 +22,7 @@ function Topbar() {
         <div className="time-pill">
           <img className="time-icon" src="/clock-icon.svg" alt="" />
           <span className="time-text">09:45</span>
-          <span className="time-label">현장</span>
+          <span className="time-label">연장</span>
         </div>
         <div className="topbar-icons">
           <button className="icon-button" type="button" aria-label="언어 변경">
